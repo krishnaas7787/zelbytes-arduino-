@@ -1,15 +1,16 @@
 const uint8_t LDR_PIN = A0;
 const float VREF = 5.0;
 
-// Update these after calibration
-const int LDR_DARK = 300;
-const int LDR_BRIGHT = 700;
+// Adjust after calibration
+const int DARK_THRESHOLD = 300;
+const int BRIGHT_THRESHOLD = 700;
 
 int readAveraged(uint8_t pin, uint8_t samples = 8) {
   long sum = 0;
 
   for (uint8_t i = 0; i < samples; i++) {
     sum += analogRead(pin);
+    delay(2);
   }
 
   return sum / samples;
@@ -17,7 +18,7 @@ int readAveraged(uint8_t pin, uint8_t samples = 8) {
 
 void setup() {
   Serial.begin(9600);
-  Serial.println(F("raw,voltage,level"));
+  Serial.println(F("raw,voltage,light_level"));
 }
 
 void loop() {
@@ -28,20 +29,23 @@ void loop() {
 
   String level;
 
-  if (raw < LDR_DARK)
+  if (raw < DARK_THRESHOLD) {
     level = "DARK";
-  else if (raw < LDR_BRIGHT)
-    level = "AMBIENT";
-  else
+  }
+  else if (raw > BRIGHT_THRESHOLD) {
     level = "BRIGHT";
+  }
+  else {
+    level = "AMBIENT";
+  }
 
   Serial.print(raw);
-  Serial.print(',');
+  Serial.print(",");
 
   Serial.print(voltage, 3);
-  Serial.print(',');
+  Serial.print(",");
 
   Serial.println(level);
 
-  delay(500);
+  delay(1000);
 }
