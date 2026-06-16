@@ -1,36 +1,51 @@
-# Task 8 - IoT Lab Telemetry Integration
+# IoT Lab Integration
 
-## Overview
-This task implements posting of bench sensor telemetry data
-(temperature, humidity, soil moisture, CO2) from an Arduino Uno
-to the Zelbytes IoT Learning Lab cloud dashboard, using a Python
-script running on the host machine to bridge Serial CSV data to
-the cloud API.
+## Objective
+Post bench telemetry data (temperature, humidity, soil moisture, CO2) from
+Arduino Uno to the Zelbytes IoT Learning Lab dashboard using a host Python
+script, since the Uno has no native WiFi capability.
 
-## Files
-- `telemetry.py` — Python script reading Serial CSV from Arduino and posting to IoT Lab
-- `secrets.h.example` — Template for required API key and device ID (real values excluded from repo)
-- `docs/IOT_LAB.md` — Full documentation of API integration and field mapping
-- `images/` — Proof of successful data transmission and dashboard visibility
+## Device Information
+- **Device ID:** krishnaas_bench01
+- **Endpoint:** https://careers.zelbytes.com/api/iot-lab/v1/telemetry
+- **Telemetry Topic:** zelbytes/lab/65/telemetry
 
-## How to Run
-1. Copy `secrets.h.example` to `secrets.h` and fill in your real API key and device ID
-2. Connect Arduino Uno via USB and confirm the correct COM port in `telemetry.py`
-3. Run the script:4. Verify successful POST responses (status 202) in the terminal
-5. Check **IoT Lab → API Explorer** to confirm new data points
+## Architecture
+Arduino Uno reads sensor values and prints them as CSV over Serial.
+A Python script running on the host laptop reads this Serial CSV data,
+converts it to JSON, and POSTs it to the IoT Lab telemetry endpoint
+using the API key stored in `secrets.h` (gitignored, never committed).
 
-## Result
-- 10 telemetry samples were successfully posted under device_id `krishnaas_bench01`
-- Each request returned HTTP status **202**
-- Data was confirmed visible in the IoT Lab API Explorer, with the temperature_c series showing 36 total recorded data points
+## Field Mapping (CSV → JSON)
 
-## Security Note
-Never commit `secret.h` (or `secrets.h`) or any file containing real API keys.
-This is enforced via `.gitignore`.
+| CSV Column (Day 11) | JSON Field         | Type  | Description                   |
+|----------------------|--------------------|-------|--------------------------------|
+| temp                 | temperature_c       | float | Temperature in Celsius        |
+| humidity             | humidity_pct        | int   | Relative humidity percentage  |
+| soil                 | soil_moisture_pct   | int   | Soil moisture percentage      |
+| co2                  | co2_ppm             | int   | CO2 concentration in ppm      |
+
+## Sample JSON Payload
+```json
+{
+  "device_id": "krishnaas_bench01",
+  "temperature_c": 29.7,
+  "humidity_pct": 87,
+  "soil_moisture_pct": 32,
+  "co2_ppm": 911
+}
+```
+
+## Security
+- API key is stored in `secrets.h`, excluded from version control via `.gitignore`.
+- Only `secrets.h.example` (with placeholder values) is committed to the repository.
+- API key is never logged, printed in screenshots, or included in commit messages.
 
 ## Verification
 - 10 sample readings were successfully posted under device_id `krishnaas_bench01`, each returning HTTP status **202**.
 - Data was confirmed visible via **IoT Lab → API Explorer**, with the `temperature_c` series showing multiple recorded data points across all samples sent.
 
+## Notes
+- ESP8266 WiFi bridge integration is planned for Day 17, removing the need for a host Python relay script.
 ## Notes
 - ESP8266 WiFi bridge integration is planned for Day 17, removing the need for a host Python relay script.
