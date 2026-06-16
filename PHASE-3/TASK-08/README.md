@@ -1,4 +1,4 @@
-# Task 1 - IoT Lab Telemetry Integration
+# Task 8 - IoT Lab Telemetry Integration
 
 ## Overview
 This task implements posting of bench sensor telemetry data
