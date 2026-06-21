@@ -88,7 +88,7 @@ A Streamlit dashboard displays sensor readings, logs, graphs, and relay status.
 
 All modules share a common ground connection.
 
-![Hardware Setup](../Images/hardware_setup.jpeg)
+![Hardware Setup](../Images/hardware_setup(1).jpeg)
 
 ---
 
