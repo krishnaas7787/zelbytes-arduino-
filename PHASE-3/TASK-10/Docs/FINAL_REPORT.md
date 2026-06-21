@@ -1,4 +1,4 @@
-e selected threshold. The project provides a practical foundation for future IoT-enabled smart agriculture applications.# **Final Firmware Report – Automated Grow-Bench Prototype**
+
 
 ## **Student Information**
 
