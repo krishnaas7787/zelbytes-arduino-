@@ -1,4 +1,4 @@
-
+# **Final Firmware Report – Automated Grow-Bench Prototype**
 
 ## **Student Information**
 
